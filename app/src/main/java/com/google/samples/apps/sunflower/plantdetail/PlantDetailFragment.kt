@@ -22,6 +22,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.compose.material.MaterialTheme
+import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.app.ShareCompat
 import androidx.core.widget.NestedScrollView
@@ -108,9 +109,25 @@ class PlantDetailFragment : Fragment() {
                 }
             }
 
-            composeView.setContent {
-                MaterialTheme {
-                    PlantDetailDescription(plantDetailViewModel)
+            /**
+             * 기본적으로 Compose는 ComposeView가 창에서 분리될 때마다 컴포지션을 삭제합니다.
+             *
+             * 컴포지션은 Compose UI 뷰 유형에 대한 조각의 보기 수명 주기를 따라야 상태를 저장하고 전환 또는 창 전환이 발생할 때 Compose UI 요소를 화면에 유지해야 합니다.
+             * 전환하는 동안 ComposeView 자체는 창에서 분리된 후에도 계속 표시됩니다.
+             *
+             * AbstractComposeView.disposeComposition 메서드를 수동으로 호출하여 컴포지션을 수동으로 삭제할 수 있습니다.
+             * 또는 더 이상 필요하지 않을 때 컴포지션을 자동으로 폐기하려면 다른 전략을 설정하거나 setViewCompositionStrategy 메서드를 호출하여 자신만의 전략을 만드십시오.
+             */
+            composeView.apply {
+                // View의 LifecycleOwner가 소멸되면 컴포지션을 삭제합니다.
+                setViewCompositionStrategy(
+                    ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed
+                )
+
+                setContent {
+                    MaterialTheme {
+                        PlantDetailDescription(plantDetailViewModel)
+                    }
                 }
             }
         }
