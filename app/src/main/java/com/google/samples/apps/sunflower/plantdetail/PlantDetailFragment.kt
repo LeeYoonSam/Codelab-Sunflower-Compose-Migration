@@ -31,6 +31,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.navArgs
+import com.google.android.material.composethemeadapter.MdcTheme
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.snackbar.Snackbar
 import com.google.samples.apps.sunflower.R
@@ -125,7 +126,12 @@ class PlantDetailFragment : Fragment() {
                 )
 
                 setContent {
-                    MaterialTheme {
+                    /**
+                     * Compose에서 View 시스템 MDC(Material Design Components) 테마를 재사용하려면 compose-theme-adapter를 사용할 수 있습니다.
+                     * MdcTheme 함수는 호스트 컨텍스트의 MDC 테마를 자동으로 읽고 밝은 테마와 어두운 테마 모두에 대해 사용자를 대신하여 MaterialTheme에 전달합니다.
+                     * 이 코드랩의 테마 색상만 필요하더라도 라이브러리는 View 시스템의 모양과 타이포그래피도 읽습니다.
+                     */
+                    MdcTheme {
                         PlantDetailDescription(plantDetailViewModel)
                     }
                 }
